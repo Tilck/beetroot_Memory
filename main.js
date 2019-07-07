@@ -1,28 +1,62 @@
 $(document).ready(function () {
 
+    const imgMax = 8;
     var imgFrontElem = document.querySelector('.memory__front');
+    var $gameBoard = $('.memory__container');
+    var $card = $('.memory__elem');
+    var $cardExample = $('#memoryElem');
     var imgObject = [];
+    var pairedCards = [];
 
     function loadImages(i){
         i = i || 1;
         var img = new Image();
-        img.onload = function(){
-            loadImages(++i);
-            imgObject.push(img);
-        };
         img.src = 'img/image' + i + '.jpg';
         img.alt = 'image' + i;
+        imgObject.push(img);
+        if (i === imgMax) {
+            return imgObject;
+        }else {
+            loadImages(++i);
+        }
+        // img.onload = function(){
+        //     loadImages(++i);
+        // };
     }
 
     loadImages();
-    console.log('test1');
-    console.log(Object.keys(imgObject).length);
-    console.log(imgObject);
-    console.log(Object.keys(imgObject).length);
-    for (var i = 1; i <= imgObject.length; i++){
-        console.log(i);
-        $('#memoryElem').clone().appendTo('.memory__container');
-        // imgFrontElem.appendChild(imgObject[i]);
+
+    for (var i = 0; i < imgObject.length; i++){
+
+        var newCard = $cardExample.clone();
+        // var newCard = $cardExample.clone().appendTo($gameBoard);
+
+
+        // newCard.attr('id', 'memoryElem' + i);
+        newCard.find('.memory__front').append(imgObject[i]);
+
+        pairedCards.push([newCard, newCard]);
+
+        for (var j = 0; j < 2; j++) {
+            pairedCards[i][j].attr('id', 'memoryElem' + i + j);
+            $gameBoard.append(pairedCards[i][j]);
+            console.log(j);
+        }
     }
-    console.log('test3');
+
+    // for (var i = 0; i < imgObject.length; i++) {
+    //     for (var j = 0; j < 2; j++) {
+    //         pairedCards[i][j].attr('id', 'memoryElem' + i + j);
+    //         $gameBoard.append(pairedCards[i][j]);
+    //         console.log(j);
+    //     }
+    // }
+
+    console.log(pairedCards);
+
+    $gameBoard.find('.memory__elem').on('click', cardClickHandler);
+
+    function cardClickHandler() {
+        $(this).addClass('active');
+    }
 });
